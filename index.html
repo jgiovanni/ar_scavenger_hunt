@@ -14,48 +14,57 @@
 
   <body style="margin : 0px; overflow: hidden;">
     <a-scene embedded arjs="sourceType: webcam; patternRatio: 0.80;">
-      <a-entity camera cursor="rayOrigin: mouse"></a-entity>
+      <a-assets>
+        <a-mixin id="text"
+          text="align: center; width: 6;
+               value: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam"
+        ></a-mixin>
+      </a-assets>
 
-      <!-- <a-entity cursor="rayOrigin: mouse"></a-entity> -->
-
-      <a-marker preset="kanji">
-          <a-entity obj-model="obj: url(/models/Dove.obj);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
-       <!-- <a-box position="0 0 0" rotation="0 45 0" color="#4CC3D9" shadow></a-box> -->
-          <!-- <a-entity fbx-model="src: url(/models/cupid.fbx);" scale="0.1 0.1 0.1"></a-entity> -->
-      </a-marker>
-
-      <a-marker preset="hiro">
-          <!-- <a-entity obj-model="obj: url(/models/Dove.obj);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity> -->
-       <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
-      </a-marker>
-
+      <!-- Pillar of Hearts -->
       <a-marker preset="custom" type="pattern" url="/new_patterns/heart01.patt">
         <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
+        <a-text value="There is no charm equal to tenderness of heart. - Jane Austen" align="center" wrap-count="40"></a-text>
       </a-marker>
 
+      <!-- Pillar of Respect -->
       <a-marker preset="custom" type="pattern" url="/new_patterns/respect.patt">
         <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
-      </a-marker>
+         <a-text value="One of the most sincere forms of respect is actually listening to what another has to say. -  Bryant H. McGill" align="center"></a-text>
+     </a-marker>
 
+      <!-- Pillar of Affection -->
       <a-marker preset="custom" type="pattern" url="/new_patterns/cupid.patt">
         <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
-      </a-marker>
+        <a-text value="“People must learn to hate, and if they can learn to hate, they can be taught to love, for love comes more naturally to the human heart than its opposite.” – Nelson Mandela" align="center"></a-text>
+   </a-marker>
 
+      <!-- Pillar of Peace -->
       <a-marker preset="custom" type="pattern" url="/new_patterns/peace.patt">
         <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
+        <a-text value="The way of peace is the way of love. Love is the greatest power on earth. It conquers all things. - Peace Pilgrim" align="center"></a-text>
       </a-marker>
 
+      <!-- Pillar of Trust -->
       <a-marker preset="custom" type="pattern" url="/new_patterns/keys.patt">
         <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
+             <a-text value="Love all, trust a few, do wrong to none. - William Shakespeare" align="center"></a-text>
       </a-marker>
 
+      <!-- Pillar of Happiness -->
       <a-marker preset="custom" type="pattern" url="/new_patterns/happiness.patt">
-        <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
+        <!-- <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity> -->
+        <a-text
+          value="Happiness is not something ready made. It comes from your own actions. - Dalai Lama"
+          position="0 -5 0" rotation="-90 0 0"
+          wrap-count="40"
+          align="center"
+          ></a-text>
       </a-marker>
 
-      <!-- <a-marker preset="kanji">
-          <a-entity fbx-model="src: url(/Ball.fbx);" scale="0.1 0.1 0.1"></a-entity>
-      </a-marker> -->
+      <!-- Camera Entity -->
+      <a-entity camera cursor="rayOrigin: mouse"></a-entity>
+
     </a-scene>
   </body>
 </html>
