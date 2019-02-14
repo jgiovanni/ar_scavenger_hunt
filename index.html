@@ -28,7 +28,6 @@
 
 	<script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
 
-	<script src="https://unpkg.com/mobx@5.9.0/lib/mobx.umd.js"></script>
 	<!-- AR.js Javascript -->
 	<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
 	<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.2/aframe/build/aframe-ar.js"></script>
@@ -38,7 +37,7 @@
       $('body').bootstrapMaterialDesign();
 
       let currentlyInteracting = false;
-      let mapState = mobx.observable.box(1);
+      let mapState = 1;
 
       const markerStates = [
         { id: 'marker-heart', name: 'Pillar of Hearts', message: 'There is no charm equal to tenderness of heart. - Jane Austen', current: 1, next: 2 },
@@ -78,33 +77,26 @@
       }
 
       function handleProgression(marker, markerId) {
-        const currentState = markerStates[mapState.get() - 1];
+        const currentState = markerStates[mapState - 1]; // Next Pillar to interact with
         const currentPillar = markerStates.find(item => item.id === markerId); // Pillar user is currently interacting with
-        const nextPillar = mapState.get() < 7 ? markerStates[mapState.get()] : null; // Pillar user is currently interacting with
 
-        if (!currentlyInteracting && mapState.get() < 7) { // User has not yet completed the
+        if (!currentlyInteracting && mapState < 7) { // User has not yet completed the
           currentlyInteracting = true;
-          if (currentState.id === currentPillar.id && currentState.current === mapState.get()) {
-            mapState.set(currentState.next); // Update Map State
+          if (currentState.id === currentPillar.id && currentState.current === mapState) {
+            mapState = currentState.next; // Update Map State
 
-            if (mapState.get() < 7) {
+            if (mapState < 7) {
               document.getElementById("map-toggle").classList.add('bounce', 'animated', 'infinite'); // activate attention seeker
-              document.getElementById("mapImage").src = `./map_layers/lisgar park digital map ${mapState.get()}.png`; // Update Map Image
+              document.getElementById("mapImage").src = `./map_layers/lisgar park digital map ${mapState}.png`; // Update Map Image
               $.snackbar({ content: "The map has been updated!", timeout: 3000 }); // Notify user that map has updated.
             } else {
               $.snackbar({ content: "You've won! Check the map to locate your prize!", timeout: 3000 }); // Notify user that map has updated.
             }
           } else { // User At wrong pillar
-            if (currentPillar.current > currentState.current) {
-              $.snackbar({ content: `Love must move forward...find the ${currentState.name}`, timeout: 3000 }); // Notify user that map has updated.
-            } else {
-              if (_.isObject(nextPillar)) {
-                $.snackbar({ content: `Love must move forward...find the ${nextPillar.name}`, timeout: 3000 }); // Notify user that map has updated.
-              }
-            }
+            $.snackbar({ content: `Love must move forward...find the ${currentState.name}`, timeout: 3000 }); // Notify user that map has updated.
           }
         } else { // User has completed all pillars
-
+          $.snackbar({ content: "You've won! Check the map to locate your prize!", timeout: 3000 }); // Notify user that map has updated.
         }
       }
 
