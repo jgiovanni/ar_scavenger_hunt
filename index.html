@@ -2,94 +2,289 @@
 <html>
 
 <head>
-  <!-- AR.js Javascript -->
-  <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
-  <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.2/aframe/build/aframe-ar.js"></script>
-  <script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
-  <script src="https://rawgit.com/mrdoob/three.js/master/examples/js/libs/inflate.min.js"></script>
-  <script>
-    AFRAME.registerComponent('registerevents', {
-      init: function () {
-        var marker = this.el;
-        marker.addEventListener('markerFound', function () {
-          var markerId = marker.id;
-          console.log('markerFound', markerId);
-          // TODO: Add your own code here to react to the marker being found.
-        });
-        marker.addEventListener('markerLost', function () {
-          var markerId = marker.id;
-          console.log('markerLost', markerId);
-          // TODO: Add your own code here to react to the marker being lost.
-        });
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-27155404-20"></script>
+	<script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-27155404-20');
+	</script>
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+	<link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+	<!-- Bootstrap Javascript -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
+
+	<!-- SnackbarJS plugin -->
+	<script src="https://cdn.rawgit.com/FezVrasta/snackbarjs/1.1.0/dist/snackbar.min.js"></script>
+
+	<script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
+
+	<script src="https://unpkg.com/mobx@5.9.0/lib/mobx.umd.js"></script>
+	<!-- AR.js Javascript -->
+	<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+	<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.2/aframe/build/aframe-ar.js"></script>
+	<script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+	<script src="https://rawgit.com/mrdoob/three.js/master/examples/js/libs/inflate.min.js"></script>
+	<script>
+      $('body').bootstrapMaterialDesign();
+
+      let currentlyInteracting = false;
+      let mapState = mobx.observable.box(1);
+
+      const markerStates = [
+        { id: 'marker-heart', name: 'Pillar of Hearts', message: 'There is no charm equal to tenderness of heart. - Jane Austen', current: 1, next: 2 },
+        { id: 'marker-cupid', name: 'Pillar of Affection', message: '“People must learn to hate, and if they can learn to hate, they can be taught to love, for love comes more naturally to the human heart than its opposite.” – Nelson Mandela', current: 2, next: 3 },
+        { id: 'marker-peace', name: 'Pillar of Peace', message: 'The way of peace is the way of love. Love is the greatest power on earth. It conquers all things. - Peace Pilgrim', current: 3, next: 4 },
+        { id: 'marker-respect', name: 'Pillar of Respect', message: 'One of the most sincere forms of respect is actually listening to what another has to say. - Bryant H. McGill', current: 4, next: 5 },
+        { id: 'marker-keys', name: 'Pillar of Trust', message: 'Love all, trust a few, do wrong to none. - William Shakespeare', current: 5, next: 6 },
+        { id: 'marker-happiness', name: 'Pillar of Happiness', message: 'Happiness is not something ready made. It comes from your own actions. - Dalai Lama', current: 6, next: 7 },
+      ];
+
+      AFRAME.registerComponent('registerevents', {
+        init() {
+          const marker = this.el;
+          marker.addEventListener('markerFound', function () {
+            const markerId = marker.id;
+            console.log('markerFound', markerId);
+            // TODO: Add your own code here to react to the marker being found.
+            debouncedProgressionHandler(marker, markerId);
+          });
+          marker.addEventListener('markerLost', function () {
+            const markerId = marker.id;
+            console.log('markerLost', markerId);
+            // TODO: Add your own code here to react to the marker being lost.
+            currentlyInteracting = false;
+          });
+        }
+      });
+
+      // remove attention seeker class from button when modal appears
+      $('#mapModal').on('shown.bs.modal', function (e) {
+        console.log('Modal Shown');
+        document.getElementById("map-toggle").classList.remove('bounce', 'animated', 'infinite');
+      });
+
+      function openMap() {
+        document.getElementById("map-toggle").classList.remove('bounce', 'animated', 'infinite');
       }
-    });
-  </script>
-  <style>
-    #arjsDebugUIContainer {
-        display: none;
+
+      function handleProgression(marker, markerId) {
+        const currentState = markerStates[mapState.get() - 1];
+        const currentPillar = markerStates.find(item => item.id === markerId); // Pillar user is currently interacting with
+        const nextPillar = mapState.get() < 7 ? markerStates[mapState.get()] : null; // Pillar user is currently interacting with
+
+        if (!currentlyInteracting && mapState.get() < 7) { // User has not yet completed the
+          currentlyInteracting = true;
+          if (currentState.id === currentPillar.id && currentState.current === mapState.get()) {
+            mapState.set(currentState.next); // Update Map State
+
+            if (mapState.get() < 7) {
+              document.getElementById("map-toggle").classList.add('bounce', 'animated', 'infinite'); // activate attention seeker
+              document.getElementById("mapImage").src = `./map_layers/lisgar park digital map ${mapState.get()}.png`; // Update Map Image
+              $.snackbar({ content: "The map has been updated!", timeout: 3000 }); // Notify user that map has updated.
+            } else {
+              $.snackbar({ content: "You've won! Check the map to locate your prize!", timeout: 3000 }); // Notify user that map has updated.
+            }
+          } else { // User At wrong pillar
+            if (currentPillar.current > currentState.current) {
+              $.snackbar({ content: `Love must move forward...find the ${currentState.name}`, timeout: 3000 }); // Notify user that map has updated.
+            } else {
+              if (_.isObject(nextPillar)) {
+                $.snackbar({ content: `Love must move forward...find the ${nextPillar.name}`, timeout: 3000 }); // Notify user that map has updated.
+              }
+            }
+          }
+        } else { // User has completed all pillars
+
+        }
       }
-    </style>
+
+      const debouncedProgressionHandler = _.debounce(handleProgression, 2000);
+	</script>
+	<style type="text/css">
+		html, body {
+			font-family: Roboto;
+		}
+
+		#warning-message {
+			display: none;
+			margin: auto;
+			position: fixed;
+			top: 0;
+			right: 0;
+			left: 0;
+			text-align: center;
+			background: white;
+			height: 100%;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-family: Roboto;
+			text-transform: uppercase;
+			white-space: pre-wrap;
+			font-size: 20pt;
+		}
+
+		#map-wrapper {
+			position: fixed;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			background-color: #111;
+			overflow-x: hidden;
+			height: 100%;
+			display: flex;
+			transition: 0.5s;
+		}
+
+		#map-wrapper.open {
+			width: auto;
+		}
+
+		#map-wrapper .map {
+			display: none;
+			width: 0;
+			transition: 0.5s;
+			height: 100%;
+		}
+
+		#map-wrapper.open .map {
+			width: auto;
+			display: block;
+		}
+
+		#map-toggle {
+			position: absolute;
+			bottom: 10px;
+			right: 10px;
+			/*background-color: #FAA798;*/
+			/*width: auto;*/
+			/*padding: 10px 20px;*/
+			/*border-radius: 15px;*/
+			/*color: #ffffff;*/
+		}
+		#map-toggle i {
+			/*color: white;*/
+		}
+
+		#map-toggle.open {
+
+		}
+
+		#arjsDebugUIContainer, .a-enter-vr {
+			display: none !important;
+		}
+
+	</style>
 </head>
 
 <body style="margin : 0px; overflow: hidden;">
-  <a-scene embedded arjs="sourceType: webcam; patternRatio: 0.80;">
-    <a-assets>
-      <a-mixin id="models" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-mixin>
-      <a-mixin id="text" position="0 -25 10" rotation="-90 0 0" text="font: roboto;primitive: plane;align: center; width:
-          6;wrap-count: 30;"></a-mixin>
-    </a-assets>
+<a-scene id="wrapper" embedded arjs="sourceType: webcam; patternRatio: 0.80;">
+	<a-assets>
+		<a-mixin id="models" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-mixin>
+		<a-mixin id="text" position="-1 -10 4" rotation="-90 0 0" text="font: roboto;primitive: plane;align: center; width:
+              6;wrap-count: 30;"></a-mixin>
+	</a-assets>
 
-    <!-- Pillar of Hearts -->
-    <a-marker preset="custom" type="pattern" url="/new_patterns/heart01.patt" id="marker-heart" registerevents>
-      <a-entity fbx-model="src: url(/models/heart.fbx);" mixin="models" position="0 0 0" rotation="-90 0 0" scale="1 1 1"></a-entity>
-      <a-text mixin="text" value="There is no charm equal to tenderness of heart. - Jane Austen" wrap-count="40"></a-text>
-    </a-marker>
+	<!-- Pillar of Hearts -->
+	<a-marker preset="custom" type="pattern" url="/new_patterns/heart01.patt" id="marker-heart" registerevents>
+		<a-entity fbx-model="src: url(/models/heart.fbx);" mixin="models" position="0 0 0" rotation="-90 0 0"
+		          scale="0.1 0.1 0.1"></a-entity>
+		<a-text mixin="text" value="There is no charm equal to tenderness of heart. - Jane Austen"
+		        wrap-count="40"></a-text>
+	</a-marker>
 
-    <!-- Pillar of Respect -->
-    <a-marker preset="custom" type="pattern" url="/new_patterns/respect.patt" id="marker-respect" registerevents>
-      <a-entity fbx-model="src: url(/models/holding-hands.fbx);" position="0 0 0" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
-      <a-text mixin="text" value="One of the most sincere forms of respect is actually listening
-          to what another has to say. - Bryant H. McGill"></a-text>
-    </a-marker>
+	<!-- Pillar of Affection -->
+	<a-marker preset="custom" type="pattern" url="/new_patterns/cupid.patt" id="marker-cupid" registerevents>
+		<a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0"
+		          scale="0.075 0.075 0.075">
+			<!--<a-animation attribute="rotation" dur="10000" loop="true" to="-90 360 360" easing="linear"
+			             repeat="indefinite"></a-animation>-->
+		</a-entity>
+		<a-text mixin="text" value="“People must learn to hate, and if they can learn to hate, they
+              can be taught to love, for love comes more naturally to the human
+              heart than its opposite.” – Nelson Mandela"></a-text>
+	</a-marker>
 
-    <!-- Pillar of Affection -->
-    <a-marker preset="custom" type="pattern" url="/new_patterns/cupid.patt" id="marker-cupid" registerevents>
-      <a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0" scale="0.075 0.075 0.075">
-        <a-animation attribute="rotation" dur="10000" loop="true" to="-90 360 360" easing="linear" repeat="indefinite"
-          ~~></a-animation>
-      </a-entity>
-      <a-text mixin="text" value="“People must learn to hate, and if they can learn to hate, they
-          can be taught to love, for love comes more naturally to the human
-          heart than its opposite.” – Nelson Mandela"></a-text>
-    </a-marker>
+	<!-- Pillar of Peace -->
+	<a-marker preset="custom" type="pattern" url="/new_patterns/peace.patt" id="marker-peace" registerevents>
+		<a-entity fbx-model="src: url(/models/dove.fbx);" position="0 0 0" rotation="-135 45 0" scale="0.5 0.5 0.5">
+			<a-animation attribute="rotation" dur="10000" loop="true" to="-135 45 -360" easing="linear"
+			             repeat="indefinite"></a-animation>
+		</a-entity>
+		<a-text mixin="text" value="The way of peace is the way of love. Love is the greatest power
+              on earth. It conquers all things. - Peace Pilgrim"></a-text>
+	</a-marker>
 
-    <!-- Pillar of Peace -->
-    <a-marker preset="custom" type="pattern" url="/new_patterns/peace.patt" id="marker-peace" registerevents>
-      <a-entity fbx-model="src: url(/models/dove.fbx);" position="0 0 0" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
-      <a-text mixin="text" value="The way of peace is the way of love. Love is the greatest power
-          on earth. It conquers all things. - Peace Pilgrim"></a-text>
-    </a-marker>
+	<!-- Pillar of Respect -->
+	<a-marker preset="custom" type="pattern" url="/new_patterns/respect.patt" id="marker-respect" registerevents>
+		<a-entity fbx-model="src: url(/models/holding-hands.fbx);" position="0 0 -1.5" rotation="0 0 0"
+		          scale="0.05 0.05 0.05">
+			<a-animation attribute="rotation" dur="10000" loop="true" to="0 0 -360" easing="linear"
+			             repeat="indefinite"></a-animation>
+		</a-entity>
+		<a-text mixin="text" value="One of the most sincere forms of respect is actually listening
+              to what another has to say. - Bryant H. McGill"></a-text>
+	</a-marker>
 
-    <!-- Pillar of Trust -->
-    <a-marker preset="custom" type="pattern" url="/new_patterns/keys.patt" id="marker-keys" registerevents>
-      <a-entity fbx-model="src: url(/models/hands-with-heart.fbx);" position="0 0 0" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-entity>
-      <a-text mixin="text" value="Love all, trust a few, do wrong to none. - William
-          Shakespeare"></a-text>
-    </a-marker>
+	<!-- Pillar of Trust -->
+	<a-marker preset="custom" type="pattern" url="/new_patterns/keys.patt" id="marker-keys" registerevents>
+		<a-entity fbx-model="src: url(/models/hands-with-heart.fbx);" position="0 0 0" rotation="-90 0 0"
+		          scale="0.3 0.3 0.3">
+				<!--<a-animation attribute="rotation" dur="10000" loop="true" to="-90 360 0 " easing="linear"
+				             repeat="indefinite"></a-animation>-->
+		</a-entity>
+		<a-text mixin="text" value="Love all, trust a few, do wrong to none. - William
+              Shakespeare"></a-text>
+	</a-marker>
 
-    <!-- Pillar of Happiness -->
-    <a-marker preset="custom" type="pattern" url="/new_patterns/happiness.patt" id="marker-happiness" registerevents>
-      <a-entity fbx-model="src: url(/models/smile.fbx);" position="0 0 0" rotation="90 90 -90" scale="0.5 0.5 0.5">
-        <!-- <a-animation attribute="rotation" dur="10000" loop="true" to="360 0 -360"></a-animation> -->
-      </a-entity>
-      <a-text mixin="text" value="Happiness is not something ready made. It comes from your own
-          actions. - Dalai Lama"></a-text>
-    </a-marker>
+	<!-- Pillar of Happiness -->
+	<a-marker preset="custom" type="pattern" url="/new_patterns/happiness.patt" id="marker-happiness" registerevents>
+		<!-- <a-entity fbx-model="src: url(/models/smile.fbx);" position="0 0 0" rotation="90 90 -90" scale="0.5 0.5 0.5"> -->
+		<a-entity fbx-model="src: url(/models/smile.fbx);" position="0 0 0" rotation="0 0 0" scale="0.5 0.125 1.5">
+			<!--<a-animation attribute="rotation" dur="10000" loop="true" to="0 0 -360" easing="linear"
+			             repeat="indefinite"></a-animation>-->
+		</a-entity>
+		<a-text mixin="text" value="Happiness is not something ready made. It comes from your own
+              actions. - Dalai Lama"></a-text>
+	</a-marker>
 
-    <!-- Camera Entity -->
-    <a-entity camera cursor="rayOrigin: mouse"></a-entity>
+	<!-- Camera Entity -->
+	<a-entity camera cursor="rayOrigin: mouse"></a-entity>
 
-  </a-scene>
+</a-scene>
+
+<button type="button" id="map-toggle" class="btn btn-info bmd-btn-fab active" onclick="openMap()" data-toggle="modal" data-target="#mapModal">
+	<i class="fas fa-map"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<img id="mapImage" class="map" src="/map_layers/lisgar park digital map 1.png" alt="Map" style="width: 100%;" >
+			</div>
+		</div>
+	</div>
+</div>
+
+
 </body>
 
 </html>
