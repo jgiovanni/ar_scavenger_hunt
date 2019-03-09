@@ -48,7 +48,7 @@
         { id: 'marker-happiness', name: 'Pillar of Happiness', message: 'Happiness is not something ready made. It comes from your own actions. - Dalai Lama', current: 6, next: 7 },
       ];
 
-      AFRAME.registerComponent('registerevents', {
+      /*AFRAME.registerComponent('registerevents', {
         init() {
           const marker = this.el;
           marker.addEventListener('markerFound', function () {
@@ -64,7 +64,7 @@
             currentlyInteracting = false;
           });
         }
-      });
+      });*/
 
       // remove attention seeker class from button when modal appears
       $('#mapModal').on('shown.bs.modal', function (e) {
@@ -181,74 +181,16 @@
 </head>
 
 <body style="margin : 0px; overflow: hidden;">
-<a-scene id="wrapper" embedded arjs="sourceType: webcam; patternRatio: 0.80;">
+<a-scene id="wrapper" embedded arjs="sourceType: webcam; patternRatio: 0.90;">
 	<a-assets>
 		<a-mixin id="models" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-mixin>
 		<a-mixin id="text" position="-1 -10 4" rotation="-90 0 0" text="font: roboto;primitive: plane;align: center; width:
               6;wrap-count: 30;"></a-mixin>
 	</a-assets>
 
-	<!-- Pillar of Hearts -->
-	<a-marker preset="custom" type="pattern" url="/new_patterns/heart01.patt" id="marker-heart" registerevents>
-		<a-entity fbx-model="src: url(/models/heart.fbx);" mixin="models" position="0 0 0" rotation="-90 0 0"
-		          scale="0.1 0.1 0.1"></a-entity>
-		<a-text mixin="text" value="There is no charm equal to tenderness of heart. - Jane Austen"
-		        wrap-count="40"></a-text>
-	</a-marker>
-
-	<!-- Pillar of Affection -->
-	<a-marker preset="custom" type="pattern" url="/new_patterns/cupid.patt" id="marker-cupid" registerevents>
-		<a-entity fbx-model="src: url(/models/cupid.fbx);" position="0 0 2" rotation="-90 0 0"
-		          scale="0.075 0.075 0.075">
-			<!--<a-animation attribute="rotation" dur="10000" loop="true" to="-90 360 360" easing="linear"
-			             repeat="indefinite"></a-animation>-->
-		</a-entity>
-		<a-text mixin="text" value="“People must learn to hate, and if they can learn to hate, they
-              can be taught to love, for love comes more naturally to the human
-              heart than its opposite.” – Nelson Mandela"></a-text>
-	</a-marker>
-
-	<!-- Pillar of Peace -->
-	<a-marker preset="custom" type="pattern" url="/new_patterns/peace.patt" id="marker-peace" registerevents>
-		<a-entity fbx-model="src: url(/models/dove.fbx);" position="0 0 0" rotation="-135 45 0" scale="0.5 0.5 0.5">
-			<a-animation attribute="rotation" dur="10000" loop="true" to="-135 45 -360" easing="linear"
-			             repeat="indefinite"></a-animation>
-		</a-entity>
-		<a-text mixin="text" value="The way of peace is the way of love. Love is the greatest power
-              on earth. It conquers all things. - Peace Pilgrim"></a-text>
-	</a-marker>
-
-	<!-- Pillar of Respect -->
-	<a-marker preset="custom" type="pattern" url="/new_patterns/respect.patt" id="marker-respect" registerevents>
-		<a-entity fbx-model="src: url(/models/holding-hands.fbx);" position="0 0 -1.5" rotation="0 0 0"
-		          scale="0.05 0.05 0.05">
-			<a-animation attribute="rotation" dur="10000" loop="true" to="0 0 -360" easing="linear"
-			             repeat="indefinite"></a-animation>
-		</a-entity>
-		<a-text mixin="text" value="One of the most sincere forms of respect is actually listening
-              to what another has to say. - Bryant H. McGill"></a-text>
-	</a-marker>
-
-	<!-- Pillar of Trust -->
-	<a-marker preset="custom" type="pattern" url="/new_patterns/keys.patt" id="marker-keys" registerevents>
-		<a-entity fbx-model="src: url(/models/hands-with-heart.fbx);" position="0 0 0" rotation="-90 0 0"
-		          scale="0.3 0.3 0.3">
-				<!--<a-animation attribute="rotation" dur="10000" loop="true" to="-90 360 0 " easing="linear"
-				             repeat="indefinite"></a-animation>-->
-		</a-entity>
-		<a-text mixin="text" value="Love all, trust a few, do wrong to none. - William
-              Shakespeare"></a-text>
-	</a-marker>
-
-	<!-- Pillar of Happiness -->
-	<a-marker preset="custom" type="pattern" url="/new_patterns/happiness.patt" id="marker-happiness" registerevents>
-		<!-- <a-entity fbx-model="src: url(/models/smile.fbx);" position="0 0 0" rotation="90 90 -90" scale="0.5 0.5 0.5"> -->
-		<a-entity fbx-model="src: url(/models/smile.fbx);" position="0 0 0" rotation="0 0 0" scale="0.5 0.125 1.5">
-			<!--<a-animation attribute="rotation" dur="10000" loop="true" to="0 0 -360" easing="linear"
-			             repeat="indefinite"></a-animation>-->
-		</a-entity>
-		<a-text mixin="text" value="Happiness is not something ready made. It comes from your own
-              actions. - Dalai Lama"></a-text>
+	<a-marker preset="custom" type="pattern" url="/new_patterns/default.patt" id="marker-heart" registerevents>
+		<a-entity fbx-model="src: url(/models/MLOGO_MAR_08.fbx);" mixin="models" position="0 0 0" rotation="0 0 0"
+		          scale="0.5 0.5 0.5"></a-entity>
 	</a-marker>
 
 	<!-- Camera Entity -->
@@ -256,9 +198,9 @@
 
 </a-scene>
 
-<button type="button" id="map-toggle" class="btn btn-info bmd-btn-fab active" onclick="openMap()" data-toggle="modal" data-target="#mapModal">
+<!--<button type="button" id="map-toggle" class="btn btn-info bmd-btn-fab active" onclick="openMap()" data-toggle="modal" data-target="#mapModal">
 	<i class="fas fa-map"></i>
-</button>
+</button>-->
 
 <!-- Modal -->
 <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalTitle" aria-hidden="true">
