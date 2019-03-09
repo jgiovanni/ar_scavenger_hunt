@@ -182,15 +182,9 @@
 
 <body style="margin : 0px; overflow: hidden;">
 <a-scene id="wrapper" embedded arjs="sourceType: webcam; patternRatio: 0.90;">
-	<a-assets>
-		<a-mixin id="models" position="0 0 2" rotation="-90 0 0" scale="0.1 0.1 0.1"></a-mixin>
-		<a-mixin id="text" position="-1 -10 4" rotation="-90 0 0" text="font: roboto;primitive: plane;align: center; width:
-              6;wrap-count: 30;"></a-mixin>
-	</a-assets>
-
-	<a-marker preset="custom" type="pattern" url="/new_patterns/default.patt" id="marker-heart" registerevents>
-		<a-entity fbx-model="src: url(/models/MLOGO_MAR_08.fbx);" mixin="models" position="0 0 0" rotation="0 0 0"
-		          scale="0.5 0.5 0.5"></a-entity>
+	<a-marker preset="hiro">
+		<a-entity fbx-model="src: url(/models/MLOGO_MAR_08.fbx);"
+		          position="0 0 0" rotation="0 0 0" scale="0.1 0.1 0.1"></a-entity>
 	</a-marker>
 
 	<!-- Camera Entity -->
